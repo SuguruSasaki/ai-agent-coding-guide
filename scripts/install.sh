@@ -1,21 +1,37 @@
 #!/usr/bin/env bash
-# Install selected coding-guide skills and agent instructions into a project.
+# Install coding-guide skills or run their validators in a project.
 set -u
 set -o pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: ai-agent-coding-guide SKILL [SKILL ...]
+Usage: coding-guide install SKILL [SKILL ...]
+       coding-guide validate [LANGUAGE] [TARGET]
 
 SKILL is one of: rust, swift, typescript, shell, markdown. Choose only the
 skills used by the current project. Run again to add more skills later.
 Existing skill files are never overwritten.
+
+The validate command runs the project's installed .agents/validate command.
+For compatibility, SKILL [SKILL ...] without "install" also installs skills.
 USAGE
 }
 
 if [[ ${1:-} == --help || ${1:-} == -h ]]; then
   usage
   exit 0
+fi
+if [[ ${1:-} == validate ]]; then
+  shift
+  if [[ ! -x .agents/validate ]]; then
+    printf 'No validation command is installed in %s\n' "$PWD" >&2
+    printf 'Run coding-guide install with the required skills first.\n' >&2
+    exit 2
+  fi
+  exec ./.agents/validate "$@"
+fi
+if [[ ${1:-} == install ]]; then
+  shift
 fi
 if (( $# < 1 )); then
   usage >&2

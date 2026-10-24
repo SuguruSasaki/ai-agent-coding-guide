@@ -17,21 +17,28 @@ from project policy, and adds review beyond automated checks.
 Choose skills for files the agent will maintain in that product. Add a language
 skill for each planned source language, the Markdown skill if agents will edit
 repository docs, and the Shell skill if they will edit shell scripts. If the
-stack is undecided, wait until the project takes shape. In the target project's
-directory, run this command with Node.js, npm, Git, and Bash available:
+stack is undecided, wait until the project takes shape. With Node.js, npm, Git,
+and Bash available, install the command once:
 
 ```bash
-npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
-  ai-agent-coding-guide typescript markdown
+npm install -g github:SuguruSasaki/ai-agent-coding-guide
+```
+
+Then run it from the target project's directory:
+
+```bash
+cd /path/to/projectA
+coding-guide install typescript markdown
 ```
 
 The available names are `rust`, `swift`, `typescript`, `shell`, and `markdown`.
-To use a local checkout, replace the GitHub package specifier with this
-repository's absolute path:
+To install the command from a local checkout, replace the GitHub package
+specifier with this repository's absolute path. For a one-time run without a
+global command, use `npx` from the target project's directory:
 
 ```bash
-npx -y -p /path/to/ai-agent-coding-guide \
-  ai-agent-coding-guide typescript markdown
+npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
+  coding-guide install typescript markdown
 ```
 
 The command copies only the selected skills into `.agents/skills/`, adds
@@ -41,8 +48,7 @@ in place. When the project adds another language, run the command again with
 its name, for example:
 
 ```bash
-npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
-  ai-agent-coding-guide rust
+coding-guide install rust
 ```
 
 Repeated runs do not duplicate the instruction block or identical skill files.
@@ -65,24 +71,25 @@ target project's `AGENTS.md`.
 
 ## Validate a project
 
-From the project root, use the installed command. If only one code validator
-is installed, it selects that validator automatically:
+From the project root, run the command. If only one code validator is installed,
+it selects that validator automatically:
 
 ```bash
-./.agents/validate
+coding-guide validate
 ```
 
 With multiple code validators, name the language. Pass a target path when the
 project lives in a subdirectory, or when checking one Shell script:
 
 ```bash
-./.agents/validate typescript
-./.agents/validate rust packages/core
-./.agents/validate shell scripts/build.sh
+coding-guide validate typescript
+coding-guide validate rust packages/core
+coding-guide validate shell scripts/build.sh
 ```
 
 The command returns the selected skill's validation result. The Markdown skill
-has no script; follow its lint, link, preview, and content checks.
+has no script; follow its lint, link, preview, and content checks. Without the
+global command, run the project's `./.agents/validate` with the same arguments.
 
 The Swift script supports Swift Package Manager projects. For an Xcode-only
 project, use its configured scheme and destination to run the equivalent build

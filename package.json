@@ -1,9 +1,10 @@
 {
   "name": "ai-agent-coding-guide",
-  "version": "0.2.0",
-  "description": "Install selected coding guide skills into the current project",
+  "version": "0.3.0",
+  "description": "Install and run selected coding guide skills in a project",
   "private": true,
   "bin": {
+    "coding-guide": "scripts/install.sh",
     "ai-agent-coding-guide": "scripts/install.sh"
   },
   "files": [
