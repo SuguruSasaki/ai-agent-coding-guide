@@ -1,0 +1,17 @@
+{
+  "name": "ai-agent-coding-guide",
+  "version": "0.1.0",
+  "description": "Install selected coding guide skills into the current project",
+  "private": true,
+  "bin": {
+    "ai-agent-coding-guide": "scripts/install.sh"
+  },
+  "files": [
+    ".agents/skills",
+    "scripts/install.sh"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuguruSasaki/ai-agent-coding-guide.git"
+  }
+}

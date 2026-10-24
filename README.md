@@ -14,14 +14,53 @@ from project policy, and adds review beyond automated checks.
 
 ## Use in a project
 
-Copy the full `.agents/skills/<skill-name>/` directory into the target
-repository and merge the corresponding line from [AGENTS.md](AGENTS.md) into
-that repository's agent instructions. Keep existing project rules and resolve
-conflicts there. In Codex, invoke a skill with, for example,
-`$markdown-docs Review this README` or `$typescript-coding Review this change`.
-Automatic discovery depends on the Codex environment; verify it in a new
-session in the target repository. Use the Markdown skill together with a
-language skill when one change affects both documentation and code.
+Choose skills for files the agent will maintain in that product. Add a language
+skill for each planned source language, the Markdown skill if agents will edit
+repository docs, and the Shell skill if they will edit shell scripts. If the
+stack is undecided, wait until the project takes shape. In the target project's
+directory, run this command with Node.js, npm, Git, and Bash available:
+
+```bash
+npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
+  ai-agent-coding-guide typescript markdown
+```
+
+The available names are `rust`, `swift`, `typescript`, `shell`, and `markdown`.
+To use a local checkout, replace the GitHub package specifier with this
+repository's absolute path:
+
+```bash
+npx -y -p /path/to/ai-agent-coding-guide \
+  ai-agent-coding-guide typescript markdown
+```
+
+The command copies only the selected skills into `.agents/skills/` and adds a
+short instruction block to the project's root `AGENTS.md`, creating that file
+if needed. Existing project instructions stay in place. When the project adds
+another language, run the command again with its name, for example:
+
+```bash
+npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
+  ai-agent-coding-guide rust
+```
+
+Repeated runs do not duplicate the instruction block or identical skill files.
+The installer stops if an existing skill with the same name differs; inspect
+and reconcile that skill before retrying. Review the resulting diff, especially
+any instructions that conflict with the project's own rules. Commit `AGENTS.md`
+and `.agents/skills/` in the target project if the team should use the guide.
+Keep product-specific architecture, build commands, and conventions in that
+project's `AGENTS.md`; the copied skills provide language guidance.
+
+Start a new Codex session in the project and invoke a skill explicitly, for
+example, `$typescript-coding Review this change`. Automatic skill discovery
+depends on the Codex environment, so verify it in the target project. Use
+`$markdown-docs` together with a language skill when a change affects both
+documentation and code.
+
+For a manual installation, copy a complete `.agents/skills/<skill-name>/`
+directory and add the matching instructions from [AGENTS.md](AGENTS.md) to the
+target project's `AGENTS.md`.
 
 Run the validation script from the target project root, or pass the target
 directory:
