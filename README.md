@@ -6,18 +6,20 @@ Language-specific Codex skills for generating, changing, and reviewing code. Eac
 | --- | --- | --- | --- |
 | Rust | [`$rust-coding`](.agents/skills/rust-coding/SKILL.md) | [Google Rust Style Guide](https://google.github.io/styleguide/rustguide.html) | Cargo fmt, Clippy, tests |
 | Swift | [`$swift-coding`](.agents/skills/swift-coding/SKILL.md) | [Google Swift Style Guide](https://google.github.io/swift/) and the [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/) it incorporates | SwiftPM build, tests, and available formatter lint |
+| TypeScript | [`$typescript-coding`](.agents/skills/typescript-coding/SKILL.md) | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) | Project typecheck, lint, and test scripts |
 
 ## Use in a project
 
-Copy the full `.agents/skills/<language>/` directory into the target repository and merge the corresponding line from [AGENTS.md](AGENTS.md) into that repository's agent instructions. Keep existing project rules and resolve conflicts there. In Codex, invoke a skill with, for example, `$swift-coding Review this change` or `$rust-coding Implement this API`. Automatic discovery depends on the Codex environment; verify it in a new session in the target repository.
+Copy the full `.agents/skills/<language>/` directory into the target repository and merge the corresponding line from [AGENTS.md](AGENTS.md) into that repository's agent instructions. Keep existing project rules and resolve conflicts there. In Codex, invoke a skill with, for example, `$typescript-coding Review this change`, `$swift-coding Review this change`, or `$rust-coding Implement this API`. Automatic discovery depends on the Codex environment; verify it in a new session in the target repository.
 
 Run the validation script from the target project root, or pass the target directory:
 
 ```bash
 .agents/skills/rust-coding/scripts/validate.sh /path/to/cargo-project
 .agents/skills/swift-coding/scripts/validate.sh /path/to/swift-package
+.agents/skills/typescript-coding/scripts/validate.sh /path/to/typescript-project
 ```
 
-The Swift script supports Swift Package Manager projects. For an Xcode-only project, use its configured scheme and destination to run the equivalent build and tests, then report those results separately. The Rust formatter settings in [`rustfmt.toml`](rustfmt.toml) are an optional template; compare them with the target project's configuration before adopting them.
+The Swift script supports Swift Package Manager projects. For an Xcode-only project, use its configured scheme and destination to run the equivalent build and tests, then report those results separately. The TypeScript script uses existing package scripts and a local compiler when available; it never installs dependencies. The Rust formatter settings in [`rustfmt.toml`](rustfmt.toml) are an optional template; compare them with the target project's configuration before adopting them.
 
-This repository contains agent instructions and examples, not a Rust or Swift application. Validation on a target project cannot establish whether a failure was pre-existing without an unchanged baseline. Both skills require a separate design review for API intent, error handling, concurrency, and testability.
+This repository contains agent instructions and examples, not an application. Validation on a target project cannot establish whether a failure was pre-existing without an unchanged baseline. Each skill requires a separate design review for API intent, error handling, concurrency, and testability.
