@@ -5,6 +5,8 @@ Use the language skill for implementation, changes, and reviews:
 - Rust: [rust-coding](.agents/skills/rust-coding/SKILL.md), explicitly `$rust-coding` in Codex.
 - Swift: [swift-coding](.agents/skills/swift-coding/SKILL.md), explicitly `$swift-coding` in Codex.
 - TypeScript: [typescript-coding](.agents/skills/typescript-coding/SKILL.md), explicitly `$typescript-coding` in Codex.
+- Shell: [shell-coding](.agents/skills/shell-coding/SKILL.md), explicitly
+  `$shell-coding` in Codex.
 - Repository Markdown: [markdown-docs](.agents/skills/markdown-docs/SKILL.md),
   explicitly `$markdown-docs` in Codex. Apply it alongside the relevant
   language skill when a task changes both code and Markdown documentation.

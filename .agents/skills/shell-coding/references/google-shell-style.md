@@ -1,0 +1,23 @@
+# Google Shell Style Guide: working summary
+
+Primary source: [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html).
+This is a selective summary for Bash coding and review, not a copy of the
+guide. Read linked sections for nuance and exceptions. `MUST`, `SHOULD`, and
+`REVIEW` are this skill's operational categories, not source severity.
+
+| ID | Level | Area | Working rule and reason |
+| --- | --- | --- | --- |
+| G-S01 | SHOULD | Scope | Use shell for small utilities or wrappers that mostly call other commands. At roughly 100 lines or complex control flow, reconsider shell so others can maintain it. [Source](https://google.github.io/styleguide/shellguide.html#when-to-use-shell) |
+| G-S02 | MUST | Interpreter | Google's executable scripts use Bash with `#!/bin/bash` and options set inside the script. Use `.sh` or no extension for executables; libraries have `.sh` and are not executable. Never set SUID/SGID on shell scripts. See local interpreter exception. [Source](https://google.github.io/styleguide/shellguide.html#which-shell-to-use) [Files](https://google.github.io/styleguide/shellguide.html#shell-files-and-interpreter-invocation) |
+| G-S03 | MUST | Output and failures | Send errors to stderr. Check relevant command and pipeline return values, and return informative nonzero statuses on failure. [Source](https://google.github.io/styleguide/shellguide.html#stdout-vs-stderr) [Returns](https://google.github.io/styleguide/shellguide.html#checking-return-values) |
+| G-S04 | SHOULD | Comments | Begin with a brief file purpose. Document library functions and non-obvious functions by behavior, inputs, outputs, and relevant globals; comment tricky intent rather than restating code. [Source](https://google.github.io/styleguide/shellguide.html#comments) |
+| G-S05 | SHOULD | Formatting | Use two spaces, no tabs, and usually at most 80 columns for new code; preserve existing indentation in modified files. Keep `; then`/`; do` on the opening line and split long pipelines clearly. [Source](https://google.github.io/styleguide/shellguide.html#formatting) |
+| G-S06 | MUST | Quoting | Quote expansions that may split or glob; use `"$@"` to forward separate arguments. Use arrays and `"${array[@]}"` for argument lists, and explicit paths such as `./*` for globbed filenames beginning with `-`. [Source](https://google.github.io/styleguide/shellguide.html#quoting) [Arrays](https://google.github.io/styleguide/shellguide.html#arrays) [Globs](https://google.github.io/styleguide/shellguide.html#wildcard-expansion-of-filenames) |
+| G-S07 | SHOULD | Expansion and tests | Prefer `"${name}"`, `$(command)`, `[[ ... ]]` for Bash string tests, `-z`/`-n` for emptiness, and `(( ... ))` for arithmetic. Know that `[[ ... ]]` compares `<`/`>` lexically. [Source](https://google.github.io/styleguide/shellguide.html#variable-expansion) [Tests](https://google.github.io/styleguide/shellguide.html#testing-strings) |
+| G-S08 | SHOULD | Shell features | Avoid `eval` and script aliases. Prefer process substitution or `readarray` over `producer | while read ...` when loop assignments must survive. Avoid `local value="$(command)"` because `local` masks the command status. [Source](https://google.github.io/styleguide/shellguide.html#eval) [Pipes](https://google.github.io/styleguide/shellguide.html#pipes-to-while) [Local](https://google.github.io/styleguide/shellguide.html#use-local-variables) |
+| G-S09 | SHOULD | Naming and layout | Use lowercase underscore names for functions and ordinary variables, uppercase underscore names for constants and exported variables, and `local` for function state. Group functions and use `main "$@"` when the script has helper functions. [Source](https://google.github.io/styleguide/shellguide.html#naming-conventions) |
+| G-S10 | SHOULD | Lint and consistency | Run ShellCheck when available. Preserve established style where the guide allows it, but inspect real correctness costs before repeating a legacy pattern. [Source](https://google.github.io/styleguide/shellguide.html#shellcheck) [Consistency](https://google.github.io/styleguide/shellguide.html#when-in-doubt-be-consistent) |
+| G-S11 | REVIEW | Command design | Consider builtins over external programs where equivalent, but choose based on clarity and the actual task. Review argument boundaries and exit behavior at each caller; lint alone cannot establish them. [Source](https://google.github.io/styleguide/shellguide.html#builtin-commands-vs-external-commands) |
+
+Do not treat every `set -e`, unquoted arithmetic value, or long indivisible
+path as a violation: context and the guide's stated exceptions matter.

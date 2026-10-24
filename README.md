@@ -9,6 +9,7 @@ from project policy, and adds review beyond automated checks.
 | Rust | [`$rust-coding`](.agents/skills/rust-coding/SKILL.md) | [Google Rust Style Guide](https://google.github.io/styleguide/rustguide.html) | Cargo fmt, Clippy, tests |
 | Swift | [`$swift-coding`](.agents/skills/swift-coding/SKILL.md) | [Google Swift Style Guide](https://google.github.io/swift/) and the [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/) it incorporates | SwiftPM build, tests, and available formatter lint |
 | TypeScript | [`$typescript-coding`](.agents/skills/typescript-coding/SKILL.md) | [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) | Project typecheck, lint, and test scripts |
+| Shell | [`$shell-coding`](.agents/skills/shell-coding/SKILL.md) | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) | Syntax and ShellCheck; project tests separately |
 | Repository Markdown | [`$markdown-docs`](.agents/skills/markdown-docs/SKILL.md) | [Google Markdown style guide](https://google.github.io/styleguide/docguide/style.html) | Project Markdown lint, links, rendered preview, and content review |
 
 ## Use in a project
@@ -29,13 +30,16 @@ directory:
 .agents/skills/rust-coding/scripts/validate.sh /path/to/cargo-project
 .agents/skills/swift-coding/scripts/validate.sh /path/to/swift-package
 .agents/skills/typescript-coding/scripts/validate.sh /path/to/typescript-project
+.agents/skills/shell-coding/scripts/validate.sh /path/to/shell-project
 ```
 
 The Swift script supports Swift Package Manager projects. For an Xcode-only
 project, use its configured scheme and destination to run the equivalent build
 and tests, then report those results separately. The TypeScript script uses
 existing package scripts and a local compiler when available; it never
-installs dependencies. The Rust formatter settings in
+installs dependencies. The Shell script checks Bash/POSIX shell syntax and runs
+ShellCheck when installed; run any project-specific tests separately and report
+missing tools as unverified. The Rust formatter settings in
 [`rustfmt.toml`](rustfmt.toml) are an optional template; compare them with the
 target project's configuration before adopting them. For Markdown, use the
 target project's existing Markdown lint, check changed links and rendered
