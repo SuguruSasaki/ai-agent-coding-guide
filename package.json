@@ -1,6 +1,6 @@
 {
   "name": "ai-agent-coding-guide",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Install selected coding guide skills into the current project",
   "private": true,
   "bin": {
@@ -8,7 +8,8 @@
   },
   "files": [
     ".agents/skills",
-    "scripts/install.sh"
+    "scripts/install.sh",
+    "scripts/project-validate.sh"
   ],
   "repository": {
     "type": "git",

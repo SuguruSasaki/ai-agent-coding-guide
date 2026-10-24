@@ -40,6 +40,8 @@ fi
 
 skills_dir=$target_root/.agents/skills
 agents_file=$target_root/AGENTS.md
+validate_source=$source_root/scripts/project-validate.sh
+validate_target=$target_root/.agents/validate
 skill_names=()
 selected_names=' '
 for requested in "$@"; do
@@ -75,6 +77,15 @@ if [[ -L $agents_file || ( -e $agents_file && ! -f $agents_file ) ]]; then
   printf 'Expected a regular file: %s\n' "$agents_file" >&2
   exit 2
 fi
+if [[ -e $validate_target || -L $validate_target ]]; then
+  if [[ ! -f $validate_target || -L $validate_target || \
+      ! -x $validate_target ]] || \
+      ! cmp -s "$validate_source" "$validate_target"; then
+    printf 'Existing validation command differs: %s\n' \
+      "$validate_target" >&2
+    exit 2
+  fi
+fi
 
 for name in "${skill_names[@]}"; do
   destination=$skills_dir/$name
@@ -101,6 +112,10 @@ if (( has_start != has_end )); then
 fi
 
 mkdir -p "$skills_dir" || exit 1
+if [[ ! -e $validate_target ]]; then
+  cp "$validate_source" "$validate_target" || exit 1
+  printf 'Installed %s\n' "$validate_target"
+fi
 for name in "${skill_names[@]}"; do
   destination=$skills_dir/$name
   if [[ ! -e $destination ]]; then
@@ -128,10 +143,11 @@ Codex when explicit skill selection is needed.
 
 Use both relevant skills when changing code and Markdown together. Before
 editing, inspect the existing design, callers, and build configuration. After
-editing code, run the matching skill's validation script against this project
-and review decisions that automated checks cannot judge. For Markdown, follow
-its checks. For review-only requests, do not edit. Report unrun checks as
-unverified. Project-specific instructions take precedence when they conflict.
+editing code, run `./.agents/validate` (or name the language if more than one
+code validator is installed) and review decisions that automated checks cannot
+judge. For Markdown, follow its checks. For review-only requests, do not edit.
+Report unrun checks as unverified. Project-specific instructions take precedence
+when they conflict.
 <!-- ai-agent-coding-guide:end -->
 BLOCK
   printf 'Updated %s\n' "$agents_file"

@@ -34,10 +34,11 @@ npx -y -p /path/to/ai-agent-coding-guide \
   ai-agent-coding-guide typescript markdown
 ```
 
-The command copies only the selected skills into `.agents/skills/` and adds a
-short instruction block to the project's root `AGENTS.md`, creating that file
-if needed. Existing project instructions stay in place. When the project adds
-another language, run the command again with its name, for example:
+The command copies only the selected skills into `.agents/skills/`, adds
+`./.agents/validate`, and adds a short instruction block to the project's root
+`AGENTS.md`, creating that file if needed. Existing project instructions stay
+in place. When the project adds another language, run the command again with
+its name, for example:
 
 ```bash
 npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
@@ -45,10 +46,10 @@ npx -y -p github:SuguruSasaki/ai-agent-coding-guide \
 ```
 
 Repeated runs do not duplicate the instruction block or identical skill files.
-The installer stops if an existing skill with the same name differs; inspect
-and reconcile that skill before retrying. Review the resulting diff, especially
-any instructions that conflict with the project's own rules. Commit `AGENTS.md`
-and `.agents/skills/` in the target project if the team should use the guide.
+The installer stops if an existing skill or validation command differs; inspect
+and reconcile it before retrying. Review the resulting diff, especially any
+instructions that conflict with the project's own rules. Commit `AGENTS.md`
+and `.agents/` in the target project if the team should use the guide.
 Keep product-specific architecture, build commands, and conventions in that
 project's `AGENTS.md`; the copied skills provide language guidance.
 
@@ -62,15 +63,26 @@ For a manual installation, copy a complete `.agents/skills/<skill-name>/`
 directory and add the matching instructions from [AGENTS.md](AGENTS.md) to the
 target project's `AGENTS.md`.
 
-Run the validation script from the target project root, or pass the target
-directory:
+## Validate a project
+
+From the project root, use the installed command. If only one code validator
+is installed, it selects that validator automatically:
 
 ```bash
-.agents/skills/rust-coding/scripts/validate.sh /path/to/cargo-project
-.agents/skills/swift-coding/scripts/validate.sh /path/to/swift-package
-.agents/skills/typescript-coding/scripts/validate.sh /path/to/typescript-project
-.agents/skills/shell-coding/scripts/validate.sh /path/to/shell-project
+./.agents/validate
 ```
+
+With multiple code validators, name the language. Pass a target path when the
+project lives in a subdirectory, or when checking one Shell script:
+
+```bash
+./.agents/validate typescript
+./.agents/validate rust packages/core
+./.agents/validate shell scripts/build.sh
+```
+
+The command returns the selected skill's validation result. The Markdown skill
+has no script; follow its lint, link, preview, and content checks.
 
 The Swift script supports Swift Package Manager projects. For an Xcode-only
 project, use its configured scheme and destination to run the equivalent build

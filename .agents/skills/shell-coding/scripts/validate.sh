@@ -10,7 +10,8 @@ Usage: validate.sh [script-or-project-directory]
 Check Bash and POSIX sh files in a target directory, or one script. The
 default is the current directory. In directory mode, find .sh/.bash files
 and extensionless files with a Bash or sh shebang, excluding common build
-and dependency directories. Project behavior tests must be run separately.
+and dependency directories, including .agents. Project behavior tests must be
+run separately.
 Exit 1 for a failed check, 2 when a check is unavailable or no files match.
 USAGE
   exit 0
@@ -32,7 +33,8 @@ if [[ -f $target ]]; then
 else
   paths_file=$(mktemp) || exit 2
   trap 'rm -f "$paths_file"' EXIT
-  if ! find "$target/." \( -name .git -o -name node_modules -o -name .build \
+  if ! find "$target/." \( -name .git -o -name .agents -o -name node_modules \
+      -o -name .build \
       -o -name target -o -name dist \) -prune -o -type f -print0 > "$paths_file"; then
     printf 'NOT RUN: failed to list target files\n' >&2
     exit 2
