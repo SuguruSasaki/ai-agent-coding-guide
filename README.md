@@ -1,15 +1,23 @@
-# Rust coding skill for AI agents
+# AI Agent Coding Guide
 
-This repository helps an agent assess design quality when generating, changing, or reviewing Rust code. It applies the goals and exceptions of the Google Rust Style Guide. The agent starts with [SKILL.md](.agents/skills/rust-coding/SKILL.md). Detailed rules live in `references/`, and [project exceptions](.agents/skills/rust-coding/references/project-exceptions.md) cover choices such as Tokio-based async/await.
+Language-specific Codex skills for generating, changing, and reviewing code. Each skill summarizes a primary style guide, distinguishes its rules from project policy, and adds design review beyond automated formatting and linting.
 
-## Installation and use
+| Language | Skill | Primary guide | Validation |
+| --- | --- | --- | --- |
+| Rust | [`$rust-coding`](.agents/skills/rust-coding/SKILL.md) | [Google Rust Style Guide](https://google.github.io/styleguide/rustguide.html) | Cargo fmt, Clippy, tests |
+| Swift | [`$swift-coding`](.agents/skills/swift-coding/SKILL.md) | [Google Swift Style Guide](https://google.github.io/swift/) and the [Swift API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/) it incorporates | SwiftPM build, tests, and available formatter lint |
 
-Copy the entire `.agents/skills/rust-coding/` directory into a Cargo project and merge this repository's `AGENTS.md` guidance into the project's root `AGENTS.md`. Preserve existing project instructions. If useful, compare the 100-column setting in `rustfmt.toml` with the project's current formatter configuration before adopting it.
+## Use in a project
 
-To invoke the skill explicitly in Codex, use a prompt such as `$rust-coding Review this Rust change`. The skill does not watch files continuously. Check skill discovery and loading in a new Codex session in the target project.
+Copy the full `.agents/skills/<language>/` directory into the target repository and merge the corresponding line from [AGENTS.md](AGENTS.md) into that repository's agent instructions. Keep existing project rules and resolve conflicts there. In Codex, invoke a skill with, for example, `$swift-coding Review this change` or `$rust-coding Implement this API`. Automatic discovery depends on the Codex environment; verify it in a new session in the target repository.
 
-## Validation
+Run the validation script from the target project root, or pass the target directory:
 
-Run `.agents/skills/rust-coding/scripts/validate.sh` from the Cargo project root. From another directory, pass the Cargo project directory as an argument. The script runs formatting, Clippy, and tests, and reports each result. To distinguish existing failures from failures introduced by a change, compare with the unchanged baseline under the same conditions.
+```bash
+.agents/skills/rust-coding/scripts/validate.sh /path/to/cargo-project
+.agents/skills/swift-coding/scripts/validate.sh /path/to/swift-package
+```
 
-This repository has no `Cargo.toml` or Rust application code. The primary source for the rules is the [Google Rust Style Guide](https://google.github.io/styleguide/rustguide.html).
+The Swift script supports Swift Package Manager projects. For an Xcode-only project, use its configured scheme and destination to run the equivalent build and tests, then report those results separately. The Rust formatter settings in [`rustfmt.toml`](rustfmt.toml) are an optional template; compare them with the target project's configuration before adopting them.
+
+This repository contains agent instructions and examples, not a Rust or Swift application. Validation on a target project cannot establish whether a failure was pre-existing without an unchanged baseline. Both skills require a separate design review for API intent, error handling, concurrency, and testability.
