@@ -17,3 +17,6 @@ target project and review design decisions that automated tools cannot judge.
 For Markdown, follow the checks in its skill. For review-only requests, do not
 change code or documentation. Report unrun checks as unverified. In a
 mixed-language change, apply each relevant language skill only to its language.
+
+When documentation and existing code conflict, follow the conventions in the
+existing code and list every discrepancy found in the final response.
